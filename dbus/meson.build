@@ -24,6 +24,7 @@ dbus_dependencies = [
     adt_libs,
     network_libs,
     systemd,
+    elogind,
     valgrind.partial_dependency(compile_args: true),
 ]
 
