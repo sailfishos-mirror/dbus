@@ -925,7 +925,6 @@ bus_selinux_id_table_print (DBusHashTable *service_table)
       security_id_t sid = _dbus_hash_iter_get_value (&iter);
       _dbus_verbose ("The key is %s\n", key);
       _dbus_verbose ("The context is %s\n", sid->ctx);
-      _dbus_verbose ("The refcount is %d\n", sid->refcnt);
     }
 #endif /* DBUS_ENABLE_VERBOSE_MODE && HAVE_SELINUX */
 }
