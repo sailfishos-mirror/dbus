@@ -15,6 +15,10 @@ Build system and dependencies:
   the compile-time DBUS_VERSION or the runtime dbus_get_version().
   (dbus#530, dbus!494; Simon McVittie)
 
+• The branch used for development releases has been renamed to `main`.
+  Please see CONTRIBUTING.md for details of how to update existing checkouts.
+  (dbus#530, Simon McVittie)
+
 Bug fixes:
 
 • On Linux, fix build regression with libselinux ≥ 3.8 and verbose mode
