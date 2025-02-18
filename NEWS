@@ -1,6 +1,11 @@
 dbus 1.16.1 (UNRELEASED)
 ========================
 
+Bug fixes:
+
+• On Linux, fix build regression with libselinux ≥ 3.8 and verbose mode
+  enabled (Debian#1096212, dbus!511; Simon McVittie)
+
 Internal changes:
 
 • Documentation updates
