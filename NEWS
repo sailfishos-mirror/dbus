@@ -1,6 +1,12 @@
 dbus 1.16.1 (UNRELEASED)
 ========================
 
+Build system:
+
+• The branch used for development releases has been renamed to `main`.
+  Please see CONTRIBUTING.md for details of how to update existing checkouts.
+  (dbus#530, Simon McVittie)
+
 Bug fixes:
 
 • On Linux, fix build regression with libselinux ≥ 3.8 and verbose mode

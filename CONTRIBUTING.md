@@ -10,6 +10,20 @@ Source code and issue tracking for the D-Bus specification and its
 reference implementation 'dbus' are provided by freedesktop.org Gitlab:
 <https://gitlab.freedesktop.org/dbus/dbus>.
 
+## Default branch renamed to `main`
+
+The default development branch for dbus has been renamed to `main`. To
+update your local checkout, use steps similar to:
+
+```sh
+git checkout master
+git branch -m master main
+git fetch
+git branch --unset-upstream
+git branch --set-upstream-to=origin/main
+git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/main
+```
+
 ## Reporting security vulnerabilities
 
 If you find a security vulnerability that is not known to the public,
