@@ -15,6 +15,11 @@ Build system and dependencies:
   the compile-time DBUS_VERSION or the runtime dbus_get_version().
   (dbus#530, dbus!494; Simon McVittie)
 
+Bug fixes:
+
+• On Linux, fix build regression with libselinux ≥ 3.8 and verbose mode
+  enabled (Debian#1096212, dbus!511; Simon McVittie)
+
 Tests and CI:
 
 • On Linux, if a test fails because a file descriptor was leaked,
