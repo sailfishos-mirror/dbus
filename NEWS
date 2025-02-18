@@ -190,7 +190,7 @@ Build-time configuration changes:
   It is incomplete and not ready for production use, and has been
   compile-time-disabled and impossible to enable without patching
   since 1.13.20. To reduce confusion, delete the code completely.
-  It remains present on the git `master` branch for 1.17.x, and will
+  It remains present on the git `main` branch for 1.17.x, and will
   hopefully be reinstated during the 1.17.x cycle.
   (dbus!488, dbus!490; Simon McVittie)
 

@@ -46,7 +46,7 @@ To make a release of D-Bus, do the following:
    dbus-specification.xml and set the release date to "(not finalized)".
 
  - push your changes and the tag to the central repository with
-     `git push origin master dbus-X.Y dbus-X.Y.Z`
+     `git push --atomic origin main dbus-X.Y dbus-X.Y.Z`
 
  - scp your tarball to freedesktop.org server and copy it to
    `dbus.freedesktop.org:/srv/dbus.freedesktop.org/www/releases/dbus/`.
@@ -72,7 +72,7 @@ Because we won't make minor changes like keeping up with the latest
 deprecations on a stable branch, stable branches should turn off the
 gcc warning for deprecated declarations (e.g. see commit 76a68867).
 
-Be extra-careful not to merge master (or any branch based on master) into a
+Be extra-careful not to merge main (or any branch based on main) into a
 stable branch.
 
 To branch:
