@@ -73,12 +73,12 @@ branch in future.
 
 Stable branches are named after the version number itself (`dbus-1.2`,
 `dbus-1.4`), whereas the development branch is simply known as
-`master`.
+`main`.
 
 New features, enhancements, minor bug fixes, and bug fixes that are
-unusually intrusive should always be based on the `master` branch.
+unusually intrusive should always be based on the `main` branch.
 
-Fixes for significant bugs should be developed on the `master` branch
+Fixes for significant bugs should be developed on the `main` branch
 and cherry-picked to the most recent stable branch.
 
 Depending on the release cycles of various Linux distributions, some
