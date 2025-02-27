@@ -24,7 +24,7 @@ RUN pip3 install meson
 # See also: https://bugs.python.org/issue36011
 RUN pip3 install --upgrade certifi
 RUN pip3 install python-certifi-win32
-RUN (New-Object System.Net.WebClient).DownloadString('https://sourceforge.net/projects/pcre/files/pcre/8.37/pcre-8.37.tar.gz.sig') >$null
+RUN (New-Object System.Net.WebClient).DownloadString('https://sourceforge.net/robots.txt') >$null
 RUN (New-Object System.Net.WebClient).DownloadString('https://wrapdb.mesonbuild.com/v2/pcre_8.37-2/get_patch') >$null
 RUN (New-Object System.Net.WebClient).DownloadString('https://zlib.net/fossils/') >$null
 
@@ -58,7 +58,7 @@ RUN cmake --build . --config Release
 RUN cmake --install . --config Release
 
 # Build glib for MSVC
-RUN git clone --depth 1 --branch 2.70.2 https://gitlab.gnome.org/GNOME/glib.git \glib
+RUN git clone --depth 1 --branch 2.82.5 https://gitlab.gnome.org/GNOME/glib.git \glib
 WORKDIR "/glib"
 RUN cmd /c 'C:\BuildTools\Common7\Tools\VsDevCmd.bat -arch=amd64 & meson setup builddir'
 RUN meson compile -C builddir
