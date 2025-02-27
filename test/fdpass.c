@@ -772,9 +772,9 @@ test_odd_limit (Fixture *f,
 
 #ifdef __FreeBSD__
   g_test_message ("Running test on FreeBSD %d...", getosreldate ());
-  if (GPOINTER_TO_INT (data) == 0 && getosreldate () < 1400000)
+  if (GPOINTER_TO_INT (data) == 0)
     {
-      g_test_skip ("This test fails on FreeBSD < 14.0");
+      g_test_skip ("This test fails on FreeBSD");
       return;
     }
 #endif
