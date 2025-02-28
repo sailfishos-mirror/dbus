@@ -364,6 +364,10 @@ config.set(
     and cc.has_header_symbol('time.h', 'clock_getres', args: compile_args_c),
 )
 
+fallback_subproject_options = [
+    'werror=false',
+]
+
 # Controls whether message bus daemon is built. Tests which depend on
 # a running dbus-daemon will be disabled if message_bus is not set.
 message_bus = get_option('message_bus')
@@ -375,7 +379,7 @@ else
         'glib-2.0', version: '>=2.40',
         required: get_option('modular_tests'),
         fallback: ['glib', 'libglib_dep'],
-        default_options: [
+        default_options: fallback_subproject_options + [
             'tests=false',
         ],
     )
@@ -398,7 +402,7 @@ use_glib = glib.found() and gio.found()
 if message_bus
     expat = dependency(
         'expat',
-        default_options: [
+        default_options: fallback_subproject_options + [
             'build_tests=false',
         ],
     )
