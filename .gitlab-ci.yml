@@ -396,8 +396,6 @@ windows-meson-mingw-ucrt64:
     paths:
       - "build/config.h"
       - "build/meson-logs/*.txt"
-  # Currently broken, https://gitlab.freedesktop.org/dbus/dbus/-/issues/462
-  when: manual
 
 windows-meson-vs15-x86:
   extends: .win-build
@@ -476,6 +474,7 @@ freebsd cmake debug:
     # Don't build doxygen documentation since installing the required tools
     # massively increases the VM image (and therefore container) size.
     CI_BUILD_ARGS: "-DDBUS_ENABLE_DOXYGEN_DOCS=OFF -DDBUS_ENABLE_XML_DOCS=ON -DCMAKE_BUILD_TYPE=Debug"
+  when: manual
 
 freebsd cmake release:
   extends:
@@ -485,6 +484,7 @@ freebsd cmake release:
     # Don't build doxygen documentation since installing the required tools
     # massively increases the VM image (and therefore container) size.
     CI_BUILD_ARGS: "-DDBUS_ENABLE_DOXYGEN_DOCS=OFF -DDBUS_ENABLE_XML_DOCS=ON -DCMAKE_BUILD_TYPE=Release"
+  when: manual
 
 freebsd meson:
   extends:
