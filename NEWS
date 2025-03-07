@@ -1,7 +1,16 @@
 dbus 1.16.4 (UNRELEASED)
 ========================
 
-...
+Bug fixes:
+
+• Correct commented-out default auth_timeout in system.conf
+  (dbus!519, Simon McVittie)
+
+Internal changes:
+
+• Skip a known-failing test on all FreeBSD versions (dbus#308)
+
+• CI fixes (dbus#546, dbus#547, dbus#548, dbus!515)
 
 dbus 1.16.2 (2025-02-27)
 ========================
