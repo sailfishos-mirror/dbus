@@ -117,7 +117,7 @@
   <!-- <limit name="max_message_size">33554432</limit> -->
   <!-- <limit name="max_message_unix_fds">16</limit> -->
   <!-- <limit name="service_start_timeout">25000</limit> -->
-  <!-- <limit name="auth_timeout">5000</limit> -->
+  <!-- <limit name="auth_timeout">30000</limit> -->
   <!-- <limit name="pending_fd_timeout">150000</limit> -->
   <!-- <limit name="max_completed_connections">2048</limit> -->
   <!-- <limit name="max_incomplete_connections">64</limit> -->
