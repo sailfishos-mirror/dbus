@@ -80,6 +80,9 @@
 #ifdef HAVE_GETPEERUCRED
 #include <ucred.h>
 #endif
+#ifdef HAVE_SYS_UCRED_H
+#include <sys/ucred.h>
+#endif
 #ifdef HAVE_ALLOCA_H
 #include <alloca.h>
 #endif
@@ -2373,6 +2376,29 @@ _dbus_read_credentials_socket  (DBusSocket       client_fd,
         pid_read = cr.unp_pid;
         uid_read = cr.unp_euid;
       }
+#elif defined(LOCAL_PEERCRED)
+    /* A variant of SO_PEERCRED found on FreeBSD 13+ and MacOS
+     * The structure returned by getsockopt in this case is called struct xucred
+     * and is documented in unix(4) page of the FreeBSD manual.
+     */
+    struct xucred cr;
+    socklen_t cr_len = sizeof (cr);
+
+    if (getsockopt (client_fd.fd, 0, LOCAL_PEERCRED, &cr, &cr_len) != 0)
+      {
+        _dbus_verbose ("Failed to getsockopt(LOCAL_PEERCRED): %s\n",
+                       _dbus_strerror (errno));
+      }
+    else if (cr_len != sizeof (cr))
+      {
+        _dbus_verbose ("Failed to getsockopt(LOCAL_PEERCRED), returned %d bytes, expected %d\n",
+                       cr_len, (int) sizeof (cr));
+      }
+    else
+      {
+        pid_read = cr.cr_pid;
+        uid_read = cr.cr_uid;
+      }
 #elif defined(HAVE_CMSGCRED)
     /* We only check for HAVE_CMSGCRED, but we're really assuming that the
      * presence of that struct implies SCM_CREDS. Supported by at least
@@ -2462,8 +2488,8 @@ _dbus_read_credentials_socket  (DBusSocket       client_fd,
      * - AIX?
      * - Blackberry?
      * - Cygwin
-     * - FreeBSD 4.6+ (but we prefer SCM_CREDS: it carries the pid)
-     * - Mac OS X
+     * - FreeBSD 4.6+ (but we prefer LOCAL_PEERCRED and fall back to SCM_CREDS: both methods carry the pid)
+     * - Mac OS X (but we prefer LOCAL_PEERCRED if available: it carries the pid)
      * - Minix 3.1.8+
      * - MirBSD?
      * - NetBSD 5.0+ (but LOCAL_PEEREID would be better: it carries the pid)
