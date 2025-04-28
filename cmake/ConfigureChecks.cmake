@@ -31,6 +31,7 @@ check_include_file(sys/random.h     HAVE_SYS_RANDOM_H)
 check_include_file(sys/resource.h     HAVE_SYS_RESOURCE_H)
 check_include_file(sys/syscall.h HAVE_SYS_SYSCALL_H)
 check_include_file(sys/time.h   HAVE_SYS_TIME_H)# dbus-sysdeps-win.c
+check_include_file(sys/ucred.h  HAVE_SYS_UCRED_H)# dbus-sysdeps-unix.c
 check_include_file(sys/vfs.h    HAVE_SYS_VFS_H)
 check_include_file(syslog.h     HAVE_SYSLOG_H)
 check_include_file(unistd.h     HAVE_UNISTD_H)  # dbus-sysdeps-util-win.c

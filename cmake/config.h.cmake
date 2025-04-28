@@ -131,6 +131,9 @@
 /* Define to 1 if you have sys/time.h */
 #cmakedefine    HAVE_SYS_TIME_H 1
 
+/* Define to 1 if you have sys/ucred.h */
+#cmakedefine    HAVE_SYS_UCRED_H 1
+
 /* Define to 1 if you have unistd.h */
 #cmakedefine   HAVE_UNISTD_H 1
 
@@ -239,7 +242,7 @@
 # endif
 #else
 # define DBUS_UNIX
-#endif 
+#endif
 
 #if defined(_WIN32) || defined(_WIN64)
 // mingw mode_t

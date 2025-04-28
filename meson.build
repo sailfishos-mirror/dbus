@@ -744,6 +744,7 @@ check_headers = [
     'sys/resource.h',
     'sys/syscall.h',
     'sys/time.h',
+    'sys/ucred.h',
     'sys/vfs.h',
     'unistd.h',
     'ws2tcpip.h',
