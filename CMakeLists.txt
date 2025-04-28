@@ -562,10 +562,10 @@ if(MSVC_IDE)
     file(REMOVE ${PROJECT_BINARY_DIR}/data/dbus-1/services)
 endif()
 
-set(DBUS_SESSION_SOCKET_DIR "" CACHE STRING "Default directory for session socket on Unix")
 if(UNIX AND NOT DBUS_SESSION_SOCKET_DIR)
     set(DBUS_SESSION_SOCKET_DIR /tmp)
 endif()
+set(DBUS_SESSION_SOCKET_DIR "${DBUS_SESSION_SOCKET_DIR}" CACHE STRING "Default directory for session socket on Unix")
 
  # Not used on Windows, where there is no system bus
 set(DBUS_SYSTEM_PID_FILE ${DBUS_RUNSTATEDIR}/dbus/pid)
