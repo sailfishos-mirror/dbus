@@ -1090,7 +1090,7 @@ if platform_unix
     test_socket_dir = get_option('test_socket_dir')
 
     if test_socket_dir == ''
-        test_socket_dir = default_socket_dir
+        test_socket_dir = session_socket_dir
     endif
 
     config.set_quoted('DBUS_TEST_SOCKET_DIR', test_socket_dir)
