@@ -1070,19 +1070,11 @@ endif
 data_config.set('SYSCONFDIR_FROM_PKGDATADIR', sysconfdir_from_pkgdatadir)
 data_config.set('DATADIR_FROM_PKGSYSCONFDIR', datadir_from_pkgsysconfdir)
 
-#### Find socket directories
-values = run_command(python, '-c',
-    'import os; [print(os.getenv(e, "")) for e in ["TMPDIR", "TEMP", "TMP"]]',
-    check: true,
-).stdout()
-values += '/tmp'
-default_socket_dir = values.strip().split('\n')[0]
-
 if platform_unix
     session_socket_dir = get_option('session_socket_dir')
 
     if session_socket_dir == ''
-        session_socket_dir = default_socket_dir
+        session_socket_dir = '/tmp'
     endif
 
     config.set_quoted('DBUS_SESSION_SOCKET_DIR', session_socket_dir)
