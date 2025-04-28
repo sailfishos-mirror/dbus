@@ -1078,13 +1078,19 @@ values = run_command(python, '-c',
 values += '/tmp'
 default_socket_dir = values.strip().split('\n')[0]
 
-test_socket_dir = get_option('test_socket_dir')
-if test_socket_dir == ''
-    test_socket_dir = default_socket_dir
+if platform_unix
+    test_socket_dir = get_option('test_socket_dir')
+
+    if test_socket_dir == ''
+        test_socket_dir = default_socket_dir
+    endif
+
+    config.set_quoted('DBUS_TEST_SOCKET_DIR', test_socket_dir)
+    test_listen = 'unix:tmpdir=' + test_socket_dir
+else
+    test_listen = 'tcp:host=localhost'
 endif
-test_listen = platform_unix ? 'unix:tmpdir=' + test_socket_dir : 'tcp:host=localhost'
 config.set_quoted('TEST_LISTEN', test_listen)
-config.set_quoted('DBUS_TEST_SOCKET_DIR', test_socket_dir)
 data_config.set('TEST_LISTEN', test_listen)
 
 session_socket_dir = get_option('session_socket_dir')
@@ -1395,8 +1401,13 @@ summary_dict += {
     'System bus user':          dbus_user,
     'Session bus services dir':
         get_option('prefix') / get_option('datadir') / 'dbus-1' / 'services',
-    'Tests socket dir':         test_socket_dir,
 }
+
+if platform_unix
+    summary_dict += {
+        'Tests socket dir': test_socket_dir,
+    }
+endif
 
 if host_os.contains('solaris')
   summary_dict += {

@@ -227,8 +227,6 @@
 #cmakedefine DBUS_USER "@DBUS_USER@"
 #cmakedefine DBUS_TEST_USER "@DBUS_TEST_USER@"
 #cmakedefine DBUS_TEST_EXEC "@DBUS_TEST_EXEC@"
-/* Where to put test sockets */
-#define DBUS_TEST_SOCKET_DIR "@TEST_SOCKET_DIR@"
 
 // system type defines
 #if defined(_WIN32) || defined(_WIN64) || defined (_WIN32_WCE)
@@ -242,6 +240,11 @@
 # endif
 #else
 # define DBUS_UNIX
+#endif
+
+#ifdef DBUS_UNIX
+/* Where to put test sockets */
+#define DBUS_TEST_SOCKET_DIR "@TEST_SOCKET_DIR@"
 #endif
 
 #if defined(_WIN32) || defined(_WIN64)
