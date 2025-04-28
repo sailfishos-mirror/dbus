@@ -1097,7 +1097,10 @@ session_socket_dir = get_option('session_socket_dir')
 if session_socket_dir == ''
     session_socket_dir = default_socket_dir
 endif
-config.set_quoted('DBUS_SESSION_SOCKET_DIR', session_socket_dir)
+
+if platform_unix
+    config.set_quoted('DBUS_SESSION_SOCKET_DIR', session_socket_dir)
+endif
 
 # This must be a listening address. It doesn't necessarily need to be an
 # address you can connect to - it can be something vague like
