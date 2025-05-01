@@ -3826,7 +3826,7 @@
     <sect2 id="transports-launchd">
       <title>launchd</title>
       <para>
-        launchd is an open-source server management system that replaces init, inetd
+        launchd is a server management system that replaces init, inetd
         and cron on Apple Mac OS X versions 10.4 and above. It provides a common session
         bus address for each user and deprecates the X11-enabled D-Bus launcher on OSX.
       </para>
