@@ -42,7 +42,7 @@
 struct DBusTimeout
 {
   int refcount;                                /**< Reference count */
-  int interval;                                /**< Timeout interval in milliseconds. */
+  int interval;                                /**< Timeout interval in milliseconds, always non-negative */
 
   DBusTimeoutHandler handler;                  /**< Timeout handler. */
   void *handler_data;                          /**< Timeout handler data. */
@@ -56,7 +56,7 @@ struct DBusTimeout
 
 /**
  * Creates a new DBusTimeout, enabled by default.
- * @param interval the timeout interval in milliseconds.
+ * @param interval the timeout interval in milliseconds, which must be non-negative
  * @param handler function to call when the timeout occurs.
  * @param data data to pass to the handler
  * @param free_data_function function to be called to free the data.
@@ -69,6 +69,8 @@ _dbus_timeout_new (int                 interval,
 		   DBusFreeFunction    free_data_function)
 {
   DBusTimeout *timeout;
+
+  _dbus_assert (interval >= 0);
 
   timeout = dbus_new0 (DBusTimeout, 1);
   if (timeout == NULL)
@@ -134,7 +136,7 @@ _dbus_timeout_unref (DBusTimeout *timeout)
  * but it cannot be used in conjunction with an application main loop.
  *
  * @param timeout the timeout
- * @param interval the new interval
+ * @param interval the new interval, which must be non-negative
  */
 void
 _dbus_timeout_restart (DBusTimeout *timeout,
@@ -438,7 +440,7 @@ _dbus_timeout_restarted (DBusTimeout *timeout)
  * to notify you of the change.
  *
  * @param timeout the DBusTimeout object.
- * @returns the interval in milliseconds.
+ * @returns the interval in milliseconds, which is always non-negative
  */
 int
 dbus_timeout_get_interval (DBusTimeout *timeout)
