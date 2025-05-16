@@ -15,13 +15,31 @@ Build system and dependencies:
   the compile-time DBUS_VERSION or the runtime dbus_get_version().
   (dbus#530, dbus!494; Simon McVittie)
 
+Build-time configuration:
+
+• The Meson and CMake build systems no longer look at $TMPDIR, $TEMP or $TMP
+  in the build environment to choose a suitable temporary directory
+  for AF_UNIX sockets on Unix. Instead, the default is hard-coded to /tmp.
+  If a different location is desired, please configure a suitable path with
+  -Dsession_socket_dir=... (Meson) or -DDBUS_SESSION_SOCKET_DIR=... (CMake).
+  Note that the selected path must be valid for all users, and must be
+  kept relatively short due to the limited length of AF_UNIX addresses.
+  (dbus#551, Simon McVittie)
+
 Enhancements:
+
+• D-Bus Specification 0.44:
+  · Don't say that launchd is open-source, which is no longer true for
+    current versions (Akihiro Suda)
 
 • Use getsockopt LOCAL_PEERCRED in preference to SCM_CREDS or getpeereid()
   on platforms that support it, namely FreeBSD 13+ and macOS
   (dbus!520; Alex S, Gleb Popov)
 
 Bug fixes:
+
+• Avoid a possible busy-loop when blocking on a DBusPendingCall with its
+  timeout set to DBUS_TIMEOUT_INFINITE (dbus!524, Gleb Popov)
 
 • Correct commented-out default auth_timeout in system.conf
   (dbus!519, Simon McVittie)
