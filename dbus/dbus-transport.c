@@ -1003,6 +1003,9 @@ _dbus_transport_do_iteration (DBusTransport  *transport,
                               unsigned int    flags,
                               int             timeout_milliseconds)
 {
+  /* All callers should have checked this */
+  _dbus_assert (timeout_milliseconds >= -1);
+
   _dbus_assert (transport->vtable->do_iteration != NULL);
 
   _dbus_verbose ("Transport iteration flags 0x%x timeout %d connected = %d\n",

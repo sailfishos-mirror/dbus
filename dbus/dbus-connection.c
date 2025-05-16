@@ -1205,7 +1205,10 @@ _dbus_connection_do_iteration_unlocked (DBusConnection *connection,
                                         int             timeout_milliseconds)
 {
   _dbus_verbose ("start\n");
-  
+
+  /* All callers should have checked this */
+  _dbus_assert (timeout_milliseconds >= -1);
+
   HAVE_LOCK_CHECK (connection);
   
   if (connection->n_outgoing == 0)
@@ -3693,6 +3696,9 @@ _dbus_connection_read_write_dispatch (DBusConnection *connection,
 {
   DBusDispatchStatus dstatus;
   dbus_bool_t progress_possible;
+
+  /* All callers should have checked this */
+  _dbus_assert (timeout_milliseconds >= -1);
 
   /* Need to grab a ref here in case we're a private connection and
    * the user drops the last ref in a handler we call; see bug 
