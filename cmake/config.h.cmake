@@ -32,7 +32,6 @@
 #cmakedefine DBUS_PREFIX "@DBUS_PREFIX@"
 #cmakedefine DBUS_SYSTEM_CONFIG_FILE  "@DBUS_SYSTEM_CONFIG_FILE@"
 #cmakedefine DBUS_SESSION_CONFIG_FILE "@DBUS_SESSION_CONFIG_FILE@"
-#cmakedefine DBUS_SESSION_SOCKET_DIR "@DBUS_SESSION_SOCKET_DIR@"
 #cmakedefine DBUS_DAEMON_NAME "@DBUS_DAEMON_NAME@"
 #cmakedefine DBUS_SYSTEM_BUS_DEFAULT_ADDRESS  "@DBUS_SYSTEM_BUS_DEFAULT_ADDRESS@"
 #cmakedefine DBUS_SESSION_BUS_CONNECT_ADDRESS  "@DBUS_SESSION_BUS_CONNECT_ADDRESS@"
@@ -227,8 +226,6 @@
 #cmakedefine DBUS_USER "@DBUS_USER@"
 #cmakedefine DBUS_TEST_USER "@DBUS_TEST_USER@"
 #cmakedefine DBUS_TEST_EXEC "@DBUS_TEST_EXEC@"
-/* Where to put test sockets */
-#define DBUS_TEST_SOCKET_DIR "@TEST_SOCKET_DIR@"
 
 // system type defines
 #if defined(_WIN32) || defined(_WIN64) || defined (_WIN32_WCE)
@@ -242,6 +239,12 @@
 # endif
 #else
 # define DBUS_UNIX
+#endif
+
+#ifdef DBUS_UNIX
+#cmakedefine DBUS_SESSION_SOCKET_DIR "@DBUS_SESSION_SOCKET_DIR@"
+/* Where to put test sockets */
+#define DBUS_TEST_SOCKET_DIR "@TEST_SOCKET_DIR@"
 #endif
 
 #if defined(_WIN32) || defined(_WIN64)

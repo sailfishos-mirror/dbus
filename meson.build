@@ -1070,28 +1070,28 @@ endif
 data_config.set('SYSCONFDIR_FROM_PKGDATADIR', sysconfdir_from_pkgdatadir)
 data_config.set('DATADIR_FROM_PKGSYSCONFDIR', datadir_from_pkgsysconfdir)
 
-#### Find socket directories
-values = run_command(python, '-c',
-    'import os; [print(os.getenv(e, "")) for e in ["TMPDIR", "TEMP", "TMP"]]',
-    check: true,
-).stdout()
-values += '/tmp'
-default_socket_dir = values.strip().split('\n')[0]
+if platform_unix
+    session_socket_dir = get_option('session_socket_dir')
 
-test_socket_dir = get_option('test_socket_dir')
-if test_socket_dir == ''
-    test_socket_dir = default_socket_dir
+    if session_socket_dir == ''
+        session_socket_dir = '/tmp'
+    endif
+
+    config.set_quoted('DBUS_SESSION_SOCKET_DIR', session_socket_dir)
+
+    test_socket_dir = get_option('test_socket_dir')
+
+    if test_socket_dir == ''
+        test_socket_dir = session_socket_dir
+    endif
+
+    config.set_quoted('DBUS_TEST_SOCKET_DIR', test_socket_dir)
+    test_listen = 'unix:tmpdir=' + test_socket_dir
+else
+    test_listen = 'tcp:host=localhost'
 endif
-test_listen = platform_unix ? 'unix:tmpdir=' + test_socket_dir : 'tcp:host=localhost'
 config.set_quoted('TEST_LISTEN', test_listen)
-config.set_quoted('DBUS_TEST_SOCKET_DIR', test_socket_dir)
 data_config.set('TEST_LISTEN', test_listen)
-
-session_socket_dir = get_option('session_socket_dir')
-if session_socket_dir == ''
-    session_socket_dir = default_socket_dir
-endif
-config.set_quoted('DBUS_SESSION_SOCKET_DIR', session_socket_dir)
 
 # This must be a listening address. It doesn't necessarily need to be an
 # address you can connect to - it can be something vague like
@@ -1395,8 +1395,13 @@ summary_dict += {
     'System bus user':          dbus_user,
     'Session bus services dir':
         get_option('prefix') / get_option('datadir') / 'dbus-1' / 'services',
-    'Tests socket dir':         test_socket_dir,
 }
+
+if platform_unix
+    summary_dict += {
+        'Tests socket dir': test_socket_dir,
+    }
+endif
 
 if host_os.contains('solaris')
   summary_dict += {

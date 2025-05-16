@@ -562,24 +562,10 @@ if(MSVC_IDE)
     file(REMOVE ${PROJECT_BINARY_DIR}/data/dbus-1/services)
 endif()
 
-#### Find socket directories
-set(DBUS_SESSION_SOCKET_DIR "" CACHE STRING "Default directory for session socket")
-if(UNIX)
-    if (CMAKE_CROSSCOMPILING)
-        if (NOT DBUS_SESSION_SOCKET_DIR)
-            message(FATAL_ERROR "cannot autodetect session socket directory "
-                    "when crosscompiling, pass -DDBUS_SESSION_SOCKET_DIR=...")
-        endif()
-    elseif(NOT $ENV{TMPDIR} STREQUAL "")
-        set(DBUS_SESSION_SOCKET_DIR $ENV{TMPDIR})
-    elseif(NOT $ENV{TEMP} STREQUAL "")
-        set(DBUS_SESSION_SOCKET_DIR $ENV{TEMP})
-    elseif(NOT $ENV{TMP} STREQUAL "")
-        set(DBUS_SESSION_SOCKET_DIR $ENV{TMP})
-    else()
-        set(DBUS_SESSION_SOCKET_DIR /tmp)
-    endif()
+if(UNIX AND NOT DBUS_SESSION_SOCKET_DIR)
+    set(DBUS_SESSION_SOCKET_DIR /tmp)
 endif()
+set(DBUS_SESSION_SOCKET_DIR "${DBUS_SESSION_SOCKET_DIR}" CACHE STRING "Default directory for session socket on Unix")
 
  # Not used on Windows, where there is no system bus
 set(DBUS_SYSTEM_PID_FILE ${DBUS_RUNSTATEDIR}/dbus/pid)
