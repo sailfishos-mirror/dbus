@@ -229,6 +229,8 @@ _dbus_platform_condvar_wait_timeout (DBusCondVar               *cond,
   struct timespec end_time;
   int result;
 
+  _dbus_assert (timeout_milliseconds >= 0);
+
 #ifdef HAVE_MONOTONIC_CLOCK
   if (have_monotonic_clock)
     {
