@@ -60,7 +60,7 @@ struct DBusTimeout
  * @param handler function to call when the timeout occurs.
  * @param data data to pass to the handler
  * @param free_data_function function to be called to free the data.
- * @returns the new DBusTimeout object,
+ * @returns the new DBusTimeout object, or #NULL if out of memory
  */
 DBusTimeout*
 _dbus_timeout_new (int                 interval,
