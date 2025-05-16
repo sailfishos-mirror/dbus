@@ -1198,7 +1198,7 @@ _dbus_connection_release_io_path (DBusConnection *connection)
  * @param flags iteration flags.
  * @param timeout_milliseconds maximum blocking time, or -1 for no limit.
  */
-void
+static void
 _dbus_connection_do_iteration_unlocked (DBusConnection *connection,
                                         DBusPendingCall *pending,
                                         unsigned int    flags,
