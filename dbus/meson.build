@@ -27,6 +27,11 @@ dbus_dependencies = [
     valgrind.partial_dependency(compile_args: true),
 ]
 
+if asserts and host_machine.system() == 'freebsd'
+    execinfo_dep = declare_dependency(link_args: '-lexecinfo')
+    dbus_dependencies += execinfo_dep
+endif
+
 # source code that goes in the installed client library
 # and is specific to library functionality
 dbus_lib_sources = [
