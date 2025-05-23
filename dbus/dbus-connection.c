@@ -1085,7 +1085,7 @@ _dbus_connection_acquire_io_path (DBusConnection *connection,
   
   if (connection->io_path_acquired)
     {
-      if (timeout_milliseconds != -1)
+      if (timeout_milliseconds >= 0)
         {
           _dbus_verbose ("waiting %d for IO path to be acquirable\n",
                          timeout_milliseconds);
@@ -1198,14 +1198,17 @@ _dbus_connection_release_io_path (DBusConnection *connection)
  * @param flags iteration flags.
  * @param timeout_milliseconds maximum blocking time, or -1 for no limit.
  */
-void
+static void
 _dbus_connection_do_iteration_unlocked (DBusConnection *connection,
                                         DBusPendingCall *pending,
                                         unsigned int    flags,
                                         int             timeout_milliseconds)
 {
   _dbus_verbose ("start\n");
-  
+
+  /* All callers should have checked this */
+  _dbus_assert (timeout_milliseconds >= -1);
+
   HAVE_LOCK_CHECK (connection);
   
   if (connection->n_outgoing == 0)
@@ -3693,6 +3696,9 @@ _dbus_connection_read_write_dispatch (DBusConnection *connection,
 {
   DBusDispatchStatus dstatus;
   dbus_bool_t progress_possible;
+
+  /* All callers should have checked this */
+  _dbus_assert (timeout_milliseconds >= -1);
 
   /* Need to grab a ref here in case we're a private connection and
    * the user drops the last ref in a handler we call; see bug 

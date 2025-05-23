@@ -257,7 +257,7 @@ _dbus_condvar_wait (DBusCondVar *cond,
  *
  * @param cond the condition variable
  * @param mutex the mutex
- * @param timeout_milliseconds the maximum time to wait
+ * @param timeout_milliseconds the maximum time to wait, must be non-negative
  * @returns #FALSE if the timeout occurred, #TRUE if not
  */
 dbus_bool_t
@@ -265,6 +265,8 @@ _dbus_condvar_wait_timeout (DBusCondVar               *cond,
                             DBusCMutex                *mutex,
                             int                        timeout_milliseconds)
 {
+  _dbus_assert (timeout_milliseconds >= 0);
+
   if (cond == NULL || mutex == NULL)
     return TRUE;
 
