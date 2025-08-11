@@ -42,6 +42,10 @@
 #include <systemd/sd-login.h>
 #endif
 
+#ifdef HAVE_ELOGIND
+#include <elogind/sd-login.h>
+#endif
+
 /**
  * @addtogroup DBusInternalsUtils
  * @{
@@ -67,7 +71,7 @@ dbus_bool_t
 _dbus_is_console_user (dbus_uid_t uid,
 		       DBusError *error)
 {
-#ifdef HAVE_SYSTEMD
+#if defined(HAVE_SYSTEMD) || defined(HAVE_ELOGIND)
   /* check if we have logind */
   if (access ("/run/systemd/seats/", F_OK) >= 0)
     {

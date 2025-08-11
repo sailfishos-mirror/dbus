@@ -96,6 +96,13 @@ option(
 )
 
 option(
+  'elogind',
+  type: 'feature',
+  value: 'disabled',
+  description: 'Use elogind for detecting user sessions'
+)
+
+option(
   'epoll',
   type: 'feature',
   value: 'auto',
