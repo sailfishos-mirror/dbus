@@ -26,6 +26,12 @@ Build-time configuration:
   kept relatively short due to the limited length of AF_UNIX addresses.
   (dbus#551, Simon McVittie)
 
+• New elogind option when compiling with Meson:
+  · `-Delogind=enabled` always uses libelogind or fails the build, and
+    therefore cannot be combined with `-Dsystemd=enabled`
+  · or `-Delogind=auto` uses libelogind only if libsystemd was not found,
+    and libelogind was found
+
 Enhancements:
 
 • D-Bus Specification 0.44:
@@ -36,10 +42,21 @@ Enhancements:
   on platforms that support it, namely FreeBSD 13+ and macOS
   (dbus!520; Alex S, Gleb Popov)
 
+• When built with Meson, libelogind can be used as an alternative to
+  libsystemd (dbus!509, Dudemanguy)
+
 Bug fixes:
 
+• Avoid a busy-loop on non-Linux operating systems that can report
+  end-of-stream with POLLHUP but neither POLLIN nor POLLERR, such as
+  FreeBSD and OpenBSD (dbus#553, Gleb Popov)
+
 • Avoid a possible busy-loop when blocking on a DBusPendingCall with its
-  timeout set to DBUS_TIMEOUT_INFINITE (dbus!524, Gleb Popov)
+  timeout set to DBUS_TIMEOUT_INFINITE
+  (dbus!524, dbus!525; Gleb Popov, Simon McVittie)
+
+• Avoid a rare assertion failure when waiting on a condition variable
+  (dbus#556, Johan Bolmsjö)
 
 • Correct commented-out default auth_timeout in system.conf
   (dbus!519, Simon McVittie)
@@ -47,6 +64,9 @@ Bug fixes:
 • When built with Meson and fallback subprojects are enabled,
   disable unnecessary features and try to link them statically
   (dbus!516, Simon McVittie)
+
+• On FreeBSD, fix the build when assertions are enabled
+  (dbus!527, Gleb Popov)
 
 • Update fallback subprojects for GLib and Expat
   (dbus!426, dbus!429; Simon McVittie)
@@ -60,7 +80,9 @@ Tests and CI:
 • Skip a known-failing test on all FreeBSD versions
   (dbus#308, Simon McVittie)
 
-• CI fixes (dbus#546, dbus#547, dbus#548; Simon McVittie)
+• CI fixes
+  (dbus#546, dbus#547, dbus#548, dbus!528, dbus!531;
+  Simon McVittie, Gleb Popov)
 
 dbus 1.16.2 (2025-02-27)
 ========================
