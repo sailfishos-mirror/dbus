@@ -177,14 +177,30 @@ compile_args = [
 compile_args += ['-fno-strict-aliasing']
 
 if platform_sunos
-    compile_args += [
-        # Solaris' C library apparently needs these runes to be threadsafe...
-        '-D_POSIX_PTHREAD_SEMANTICS',
-        # ... this opt-in to get sockaddr_in6 and sockaddr_storage...
-        '-D__EXTENSIONS__',
-        # ... and this opt-in to get file descriptor passing support
-        ' -D_XOPEN_SOURCE=500',
-    ]
+    # The headers on illumos systems and Solaris versions prior to 11.4.0
+    # default to an early draft of the POSIX re-entrant functions that is
+    # not compatible with the final standard, and need a flag to enable the
+    # common standard versions of these functions.
+    pthread_check_code = '''#include <pwd.h>
+    int func(const char *name, struct passwd *pwd, struct passwd **result) {
+	static char buffer[1024];
+	return getpwnam_r(name, pwd, buffer, sizeof(buffer), result);
+    }'''
+    if not cc.compiles(pthread_check_code, name: 'sunos pthread check')
+        compile_args += [ '-D_POSIX_PTHREAD_SEMANTICS' ]
+    endif
+    # The headers on illumos systems and Solaris versions prior to 11.4.0
+    # require an extra flag to expose POSIX file descriptor passing support.
+    if not cc.has_member('struct msghdr', 'msg_control', prefix: '#include <sys/socket.h>')
+        compile_args += [ '-D_XOPEN_SOURCE=600' ]
+    endif
+    # The standard headers on illumos & Solaris systems limit themselves to
+    # defining just the interfaces from the standard when _XOPEN_SOURCE or
+    # _POSIX_SOURCE are defined, unless __EXTENSIONS__ is also defined to
+    # allow defining non-standard extensions to the interfaces.
+    if not cc.has_function('clearenv', prefix: '#include <stdlib.h>', args: compile_args)
+        compile_args += [ '-D__EXTENSIONS__' ]
+    endif
 endif
 
 dbus_static_flags = ( get_option('default_library') == 'static'
