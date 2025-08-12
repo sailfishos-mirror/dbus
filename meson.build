@@ -579,16 +579,22 @@ endif
 
 have_console_owner_file = false
 console_owner_file = get_option('solaris_console_owner_file')
+
+if console_owner_file == 'auto'
+  if platform_sunos
+    console_owner_file = '/dev/console'
+  else
+    console_owner_file = ''
+  endif
+endif
+
 if console_owner_file != ''
   if not platform_sunos
     error('solaris_console_owner_file is only supported on Solaris or illumos')
   endif
   have_console_owner_file = true
-  if console_owner_file == 'auto'
-    console_owner_file = '/dev/console'
-  else
-  endif
 endif
+
 config.set('HAVE_CONSOLE_OWNER_FILE', have_console_owner_file)
 config.set_quoted('DBUS_CONSOLE_OWNER_FILE', console_owner_file)
 
