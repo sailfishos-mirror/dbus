@@ -108,6 +108,9 @@ platform_win32ce = host_os.contains('mingw32ce')
 
 platform_unix = not platform_windows
 
+# "sunos" is either Solaris or illumos in meson
+platform_sunos = (host_os == 'sunos')
+
 config.set('DBUS_UNIX',   platform_unix)
 config.set('DBUS_CYGWIN', platform_cygwin)
 config.set('DBUS_WIN',    platform_windows)
@@ -173,7 +176,7 @@ compile_args = [
 # See https://gitlab.freedesktop.org/dbus/dbus/-/issues/4
 compile_args += ['-fno-strict-aliasing']
 
-if host_os.contains('solaris')
+if platform_sunos
     compile_args += [
         # Solaris' C library apparently needs these runes to be threadsafe...
         '-D_POSIX_PTHREAD_SEMANTICS',
@@ -561,8 +564,8 @@ endif
 have_console_owner_file = false
 console_owner_file = get_option('solaris_console_owner_file')
 if console_owner_file != ''
-  if not host_os.contains('solaris')
-    error('solaris_console_owner_file is only supported on Solaris)')
+  if not platform_sunos
+    error('solaris_console_owner_file is only supported on Solaris or illumos')
   endif
   have_console_owner_file = true
   if console_owner_file == 'auto'
@@ -1414,7 +1417,7 @@ if platform_unix
     }
 endif
 
-if host_os.contains('solaris')
+if platform_sunos
   summary_dict += {
       'Console owner file': console_owner_file,
   }
