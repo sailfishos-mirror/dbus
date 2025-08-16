@@ -685,6 +685,25 @@ foreach function : ['socket', 'socketpair']
     endif
 endforeach
 
+# getsockname(), getpeername() might be in -lnsl, for example on older Solaris
+foreach function : ['getsockname', 'getpeername']
+    if not cc.has_function(
+        function,
+        args: compile_args_c,
+        dependencies: network_libs,
+    )
+        nsl_lib = cc.find_library('nsl', required: false)
+        if nsl_lib.found() and cc.has_function(
+            function,
+            args: compile_args_c,
+            dependencies: network_libs + [nsl_lib],
+        )
+            network_libs += [nsl_lib]
+            break
+        endif
+    endif
+endforeach
+
 if get_option('x11_autolaunch').disabled()
     use_x11_autolaunch = false
     x11 = not_found

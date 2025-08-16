@@ -23,6 +23,7 @@ if not platform_windows
     dbus_cleanup_sockets = executable('dbus-cleanup-sockets',
         'dbus-cleanup-sockets.c',
         include_directories: root_include,
+        dependencies: network_libs,
         install: true,
     )
 endif
@@ -54,6 +55,7 @@ dbus_monitor = executable('dbus-monitor',
     'dbus-monitor.c',
     'tool-common.c',
     include_directories: root_include,
+    dependencies: network_libs,
     link_with: libdbus,
     install: true,
 )
@@ -73,6 +75,7 @@ dbus_send = executable('dbus-send',
     'dbus-send.c',
     'tool-common.c',
     include_directories: root_include,
+    dependencies: network_libs,
     link_with: libdbus,
     install: true,
 )
