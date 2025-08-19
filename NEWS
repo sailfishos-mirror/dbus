@@ -32,6 +32,13 @@ Build-time configuration:
   · or `-Delogind=auto` uses libelogind only if libsystemd was not found,
     and libelogind was found
 
+• The solaris_console_owner_file Meson option now defaults to 'auto',
+  which attempts to make a reasonable choice on any platform.
+  This is currently the same as setting it to /dev/console on Solaris
+  derivatives, or disabling the feature on any other platform.
+  In previous releases, any non-empty setting was an error on non-Solaris
+  platforms.
+
 Enhancements:
 
 • D-Bus Specification 0.44:
@@ -65,8 +72,15 @@ Bug fixes:
   disable unnecessary features and try to link them statically
   (dbus!516, Simon McVittie)
 
+• On non-Linux platforms, never try to compile with Linux epoll support,
+  even if the OS has a compatibility interface for epoll
+  (dbus#557; Alan Coopersmith, Jonathan Perkins)
+
 • On FreeBSD, fix the build when assertions are enabled
   (dbus!527, Gleb Popov)
+
+• Fix the Meson build on Solaris derivatives such as illumos
+  (dbus#557; Alan Coopersmith, Jonathan Perkins)
 
 • Update fallback subprojects for GLib and Expat
   (dbus!426, dbus!429; Simon McVittie)
@@ -81,7 +95,7 @@ Tests and CI:
   (dbus#308, Simon McVittie)
 
 • CI fixes
-  (dbus#546, dbus#547, dbus#548, dbus!528, dbus!531;
+  (dbus#546, dbus#547, dbus#548, dbus#558, dbus!528, dbus!531;
   Simon McVittie, Gleb Popov)
 
 dbus 1.16.2 (2025-02-27)
