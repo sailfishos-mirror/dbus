@@ -209,7 +209,7 @@ option(
 option(
   'solaris_console_owner_file',
   type: 'string',
-  value: '',
+  value: 'auto',
   description: 'File to determine current console owner on Solaris (or "auto")'
 )
 

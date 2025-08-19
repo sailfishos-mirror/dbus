@@ -108,6 +108,9 @@ platform_win32ce = host_os.contains('mingw32ce')
 
 platform_unix = not platform_windows
 
+# "sunos" is either Solaris or illumos in meson
+platform_sunos = (host_os == 'sunos')
+
 config.set('DBUS_UNIX',   platform_unix)
 config.set('DBUS_CYGWIN', platform_cygwin)
 config.set('DBUS_WIN',    platform_windows)
@@ -173,15 +176,31 @@ compile_args = [
 # See https://gitlab.freedesktop.org/dbus/dbus/-/issues/4
 compile_args += ['-fno-strict-aliasing']
 
-if host_os.contains('solaris')
-    compile_args += [
-        # Solaris' C library apparently needs these runes to be threadsafe...
-        '-D_POSIX_PTHREAD_SEMANTICS',
-        # ... this opt-in to get sockaddr_in6 and sockaddr_storage...
-        '-D__EXTENSIONS__',
-        # ... and this opt-in to get file descriptor passing support
-        ' -D_XOPEN_SOURCE=500',
-    ]
+if platform_sunos
+    # The headers on illumos systems and Solaris versions prior to 11.4.0
+    # default to an early draft of the POSIX re-entrant functions that is
+    # not compatible with the final standard, and need a flag to enable the
+    # common standard versions of these functions.
+    pthread_check_code = '''#include <pwd.h>
+    int func(const char *name, struct passwd *pwd, struct passwd **result) {
+	static char buffer[1024];
+	return getpwnam_r(name, pwd, buffer, sizeof(buffer), result);
+    }'''
+    if not cc.compiles(pthread_check_code, name: 'sunos pthread check')
+        compile_args += [ '-D_POSIX_PTHREAD_SEMANTICS' ]
+    endif
+    # The headers on illumos systems and Solaris versions prior to 11.4.0
+    # require an extra flag to expose POSIX file descriptor passing support.
+    if not cc.has_member('struct msghdr', 'msg_control', prefix: '#include <sys/socket.h>')
+        compile_args += [ '-D_XOPEN_SOURCE=600' ]
+    endif
+    # The standard headers on illumos & Solaris systems limit themselves to
+    # defining just the interfaces from the standard when _XOPEN_SOURCE or
+    # _POSIX_SOURCE are defined, unless __EXTENSIONS__ is also defined to
+    # allow defining non-standard extensions to the interfaces.
+    if not cc.has_function('clearenv', prefix: '#include <stdlib.h>', args: compile_args)
+        compile_args += [ '-D__EXTENSIONS__' ]
+    endif
 endif
 
 dbus_static_flags = ( get_option('default_library') == 'static'
@@ -447,7 +466,7 @@ else
     endif
 endif
 
-if get_option('epoll').disabled()
+if get_option('epoll').disabled() or (get_option('epoll').auto() and (host_os != 'linux'))
     use_linux_epoll = false
 else
     use_linux_epoll = (
@@ -560,16 +579,22 @@ endif
 
 have_console_owner_file = false
 console_owner_file = get_option('solaris_console_owner_file')
-if console_owner_file != ''
-  if not host_os.contains('solaris')
-    error('solaris_console_owner_file is only supported on Solaris)')
-  endif
-  have_console_owner_file = true
-  if console_owner_file == 'auto'
+
+if console_owner_file == 'auto'
+  if platform_sunos
     console_owner_file = '/dev/console'
   else
+    console_owner_file = ''
   endif
 endif
+
+if console_owner_file != ''
+  if not platform_sunos
+    error('solaris_console_owner_file is only supported on Solaris or illumos')
+  endif
+  have_console_owner_file = true
+endif
+
 config.set('HAVE_CONSOLE_OWNER_FILE', have_console_owner_file)
 config.set_quoted('DBUS_CONSOLE_OWNER_FILE', console_owner_file)
 
@@ -655,6 +680,25 @@ foreach function : ['socket', 'socketpair']
             dependencies: network_libs + [socket_lib],
         )
             network_libs += [socket_lib]
+            break
+        endif
+    endif
+endforeach
+
+# getsockname(), getpeername() might be in -lnsl, for example on older Solaris
+foreach function : ['getsockname', 'getpeername']
+    if not cc.has_function(
+        function,
+        args: compile_args_c,
+        dependencies: network_libs,
+    )
+        nsl_lib = cc.find_library('nsl', required: false)
+        if nsl_lib.found() and cc.has_function(
+            function,
+            args: compile_args_c,
+            dependencies: network_libs + [nsl_lib],
+        )
+            network_libs += [nsl_lib]
             break
         endif
     endif
@@ -1414,7 +1458,7 @@ if platform_unix
     }
 endif
 
-if host_os.contains('solaris')
+if platform_sunos
   summary_dict += {
       'Console owner file': console_owner_file,
   }
