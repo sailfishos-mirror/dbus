@@ -743,7 +743,6 @@ check_headers = [
     'errno.h',
     'inttypes.h',
     'io.h',
-    'locale.h',
     'linux/close_range.h',
     'linux/magic.h',
     'locale.h',
