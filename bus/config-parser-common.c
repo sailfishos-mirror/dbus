@@ -65,10 +65,6 @@ bus_config_parser_element_name_to_type (const char *name)
     {
       return ELEMENT_LISTEN;
     }
-  else if (strcmp (name, "auth") == 0)
-    {
-      return ELEMENT_AUTH;
-    }
   else if (strcmp (name, "allow") == 0)
     {
       return ELEMENT_ALLOW;
