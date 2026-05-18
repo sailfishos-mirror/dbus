@@ -606,14 +606,9 @@ config.set_quoted('DBUS_CONSOLE_OWNER_FILE', console_owner_file)
 if get_option('libaudit').disabled()
     have_libaudit = false
 else
-    libaudit = cc.find_library('audit', required: false)
-    libaudit_ok = cc.has_function('audit_log_user_avc_message', dependencies: libaudit)
-    cap_ng   = cc.find_library('cap-ng', required: false)
-    cap_ng_ok   = cc.has_function('capng_clear', dependencies: cap_ng)
-    have_libaudit = libaudit_ok and cap_ng_ok
-    if get_option('libaudit').enabled() and not have_libaudit
-        error('libaudit support requested but not found')
-    endif
+    libaudit = dependency('audit', required: get_option('libaudit'))
+    cap_ng = dependency('libcap-ng', required: get_option('libaudit'))
+    have_libaudit = libaudit.found() and cap_ng.found()
     # For the systemd system unit
     data_config.set('AMBIENT_CAPS', 'AmbientCapabilities=CAP_AUDIT_WRITE')
 endif
