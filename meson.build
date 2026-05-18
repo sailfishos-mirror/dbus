@@ -398,7 +398,7 @@ endif
 message_bus = get_option('message_bus')
 
 if get_option('modular_tests').disabled()
-    glib = dependency('', required: false)
+    glib = not_found
 else
     glib = dependency(
         'glib-2.0', version: '>=2.40',
@@ -420,7 +420,7 @@ if glib.found()
         have_gio_unix = gio.found()
     endif
 else
-    gio = dependency('', required: false)
+    gio = not_found
     have_gio_unix = false
 endif
 use_glib = glib.found() and gio.found()
@@ -433,7 +433,7 @@ if message_bus
         ],
     )
 else
-    expat = dependency('', required: false)
+    expat = not_found
 endif
 
 if expat.type_name() == 'internal'
@@ -564,7 +564,7 @@ if use_systemd
     if elogind_opt.enabled()
         error('-Dsystemd and -Delogind are mutually exclusive')
     endif
-    elogind = dependency('', required: false)
+    elogind = not_found
 else
     elogind = dependency('libelogind', version: '>=209', required: elogind_opt)
 endif
@@ -635,7 +635,7 @@ config.set('HAVE_ADT', adt_api_check)
 if adt_api_check
     adt_libs = cc.find_library('bsm')
 else
-    adt_libs = dependency('', required: false)
+    adt_libs = not_found
 endif
 
 # Check for SCM_RIGHTS
