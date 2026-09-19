@@ -549,6 +549,11 @@ if use_systemd
             : '/usr/lib/systemd/user'
         )
     endif
+
+    # Version 257 and above support locked system accounts; use if available.
+    if systemd.version().version_compare('>=257')
+        data_config.set('DBUS_USER_LOCK', '!')
+    endif
 else
     systemctl = ''
 endif
