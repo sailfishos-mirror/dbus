@@ -657,6 +657,10 @@ The following annotations are the most useful:
 * Mark a symbol as deprecated. This should be used whenever the API is changed,
   specifying the version introducing the deprecation, the reason for
   deprecation, and a replacement symbol to use.
+- $code(org.freedesktop.DBus.Experimental)
+* Mark a symbol as experimental. This should be used whenever the API is new and
+  still subject to incompatible changes, to warn adopters. It should be dropped
+  once the API is declared stable and subject to backward compatibility guarantees.
 - $code(org.gtk.GDBus.Since)
 * Mark a symbol as having been added to the API after the initial release. This
   should include the version the symbol was first added in.

@@ -4634,6 +4634,7 @@
             &lt;method name="Bazify"&gt;
               &lt;arg name="bar" type="(iiu)" direction="in"/&gt;
               &lt;arg name="bar" type="v" direction="out"/&gt;
+              &lt;annotation name="org.freedesktop.DBus.Experimental" value="true"/&gt;
             &lt;/method&gt;
             &lt;method name="Mogrify"&gt;
               &lt;arg name="bar" type="(iiav)" direction="in"/&gt;
@@ -4725,6 +4726,11 @@
              <entry>org.freedesktop.DBus.Deprecated</entry>
              <entry>true,false</entry>
              <entry>Whether or not the entity is deprecated; defaults to false</entry>
+           </row>
+           <row>
+             <entry>org.freedesktop.DBus.Experimental</entry>
+             <entry>true,false</entry>
+             <entry>Whether or not the entity is experimental; defaults to false</entry>
            </row>
            <row>
              <entry>org.freedesktop.DBus.GLib.CSymbol</entry>
